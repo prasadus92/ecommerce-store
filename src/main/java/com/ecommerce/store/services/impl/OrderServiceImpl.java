@@ -42,20 +42,15 @@ public class OrderServiceImpl implements OrderService {
 
         Set<OrderItem> items = new HashSet<>();
 
-        order.getItems().forEach(item -> {
-            Optional<Product> existing = productRepository.findById(item.getProductId());
-            if (existing.isPresent()) {
-                Product product = existing.get();
-                items.add(orderItemRepository.save(OrderItem.builder()
-                                                            .order(created)
-                                                            .product(product)
-                                                            .quantity(item.getQuantity())
-                                                            .unitPrice(product.getPrice())
-                                                            .build()));
-            } else {
-                throw new ProductNotExistsException("One or more of the Products in the request doesn't exist");
-            }
-        });
+       order.getItems().forEach(item -> productRepository
+                  .findById(item.getProductId())
+                  .map(product -> items.add(orderItemRepository.save(
+                           OrderItem.builder()
+                          .order(created)
+                          .product(product)
+                          .quantity(item.getQuantity())
+                          .unitPrice(product.getPrice())
+                          .build()))).orElseThrow(() -> new ProductNotExistsException("One or more of the Products in the request doesn't exist")));
 
         log.info("### All order items are persisted");
 
