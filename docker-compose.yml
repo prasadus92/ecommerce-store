@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+
+  postgres:
+    image: postgres:10
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=store_user
+      - POSTGRES_PASSWORD=storesecret
+      - POSTGRES_DB=store_db
+    volumes:
+      - ./storage/postgresql/data:/var/lib/postgresql/data
+
+  store-application:
+    image: com.ecommerce/store:latest
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "localhost:8080/actuator/health"]
+    depends_on:
+      - postgres
+    command: ["/app/wait-for-postgres.sh", "postgres", "sh", "/app/launch-application.sh"]
+    environment:
+      - SPRING_PROFILES_ACTIVE=production
+      - POSTGRES_PASSWORD=storesecret

@@ -1,0 +1,13 @@
+language: java
+
+notifications:
+  email: false
+
+jdk:
+  - openjdk8
+
+before_install:
+  - chmod +x mvnw
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
