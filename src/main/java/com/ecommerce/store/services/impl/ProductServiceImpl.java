@@ -32,20 +32,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product updateProduct(ProductUpdationDto productDto) {
-        Optional<Product> existed = repository.findById(productDto.getId());
-        if (existed.isPresent()) {
-            Product existingProduct = existed.get();
-            return repository.save(Product.builder()
-                                          .id(productDto.getId())
-                                          .name(StringUtils.isEmpty(productDto.getName()) ? existingProduct.getName() : productDto.getName())
-                                          .description(
-                                              StringUtils.isEmpty(productDto.getDescription()) ? existingProduct.getDescription() : productDto.getDescription())
-                                          .price((productDto.getPrice() == null) ? existingProduct.getPrice()
-                                                                                 : productDto.getPrice())
-                                          .build());
-        }
-
-        throw new ProductNotExistsException("Product doesn't exist in the system to update");
+        return repository
+                .findById(productDto.getId())
+                .map(existingProduct -> repository.save(Product.builder()
+                        .id(productDto.getId())
+                        .name(StringUtils.isEmpty(productDto.getName()) ? existingProduct.getName() : productDto.getName())
+                        .description(
+                                StringUtils.isEmpty(productDto.getDescription()) ? existingProduct.getDescription() : productDto.getDescription())
+                        .price((productDto.getPrice() == null) ? existingProduct.getPrice()
+                                : productDto.getPrice())
+                        .build())
+                ).orElseThrow(() -> new ProductNotExistsException("Product doesn't exist in the system to update"));
     }
 
     // ToDo: Add pagination
