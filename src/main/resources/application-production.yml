@@ -1,0 +1,19 @@
+logging:
+  level: INFO
+
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    password: storesecret
+    url: jdbc:postgresql://postgres:5432/store_db
+    username: store_user
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 10
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    show-sql: true
