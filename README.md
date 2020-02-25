@@ -1,5 +1,7 @@
 # Online Store Application
 
+[![Build Status](https://travis-ci.com/prasadus92/registration-service.svg?branch=master)](https://travis-ci.com/prasadus92/ecommerce-store)
+
 ## Web Service
 
 Create a tiny REST/JSON web service in Java using Spring Boot (RestController) with an API that
