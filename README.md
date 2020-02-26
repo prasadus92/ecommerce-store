@@ -1,8 +1,8 @@
-# Online Store Application
+# E-commerce Application
 
 [![Build Status](https://travis-ci.com/prasadus92/registration-service.svg?branch=master)](https://travis-ci.com/prasadus92/ecommerce-store) [![codecov](https://codecov.io/gh/patrykkrawczyk/TDDAndDesignPatternsExample/branch/master/graph/badge.svg)](https://codecov.io/gh/prasadus92/ecommerce-store)
 
-## Web Service
+## Problem Statement
 
 Create a tiny REST/JSON web service in Java using Spring Boot (RestController) with an API that
 supports basic Products' CRUD:
@@ -28,7 +28,7 @@ of the products in it.
 It should be possible to change the product’s price, but this shouldn’t affect the total value of orders which
 have already been placed.
 
-## Requirements
+### Requirements
 
 - Implement your solution according to the above specification.
 
@@ -46,13 +46,15 @@ have already been placed.
 
 - Java 8
 
-- Spring Boot
+- Spring Boot v2.2.4.RELEASE
 
-- PostgreSQL
+- PostgreSQL v10
 
 - Maven
 
-- Docker 
+- Docker
+
+- Travis (CI)
 
 ## Building the Application
 
@@ -112,15 +114,28 @@ To tail the logs, just run -
 docker-compose logs -f
 ```
 
-*NOTE:* The Spring profile used while running with Docker is `production`. This requires PostgreSQL to be running, which is already configured in the Docker Compose file. 
+*NOTE:* The Spring profile used while running with Docker is `production`. This requires PostgreSQL to be running, which is already configured in the Docker Compose file.
+
+## Accessing the API Documentation
+
+Swagger is included in the project. Hence, the API documentation is available at http://localhost:8080/swagger-ui.html. 
 
 ## Questions on Extensibility
 
-- You do not need to add authentication to your web service, but propose a protocol / method and
+1. You do not need to add authentication to your web service, but propose a protocol / method and
 justify your choice.
 
-- How can you make the service redundant? What considerations should you do?
+We could use OAuth2 and JWT based authentication which is quite straightforward to implement by adding appropriate Spring Security dependencies. Also, this is convenient as there might be multiple clients using this service in a real-world scenario (https://www.toptal.com/spring/spring-boot-oauth2-jwt-rest-protection).
+An alternate approach is to use an identity provider like Okta, Auth0 etc., if that's an allowed use-case.
+
+2. How can you make the service redundant? What considerations should you do?
+
+The concurrency part is handled using Optimistic Locking, specifically for the update of the Products. It would be ideal to add additional mechanisms like an "ETag" - "If-Match" header support.
+Also, configuration (including passwords) is currently packaged along with the generated artifact; it would be better to use a separate Spring Cloud Config service in a scenario where the architecture is based on Microservices. 
 
 ## To Do
 
-1. Try finding an alternative to using wait-for-postgres.sh; it currently requires PostgreSQL client to be installed on the Docker container.
+1. Try finding an alternative to using `wait-for-postgres.sh`; it currently requires PostgreSQL client to be installed on the Docker container.
+2. Improve tests & coverage.
+3. Add pagination to "fetch" APIs.
+4. "User" is not included in the implemented model; that's something to be considered in a real-world scenario.

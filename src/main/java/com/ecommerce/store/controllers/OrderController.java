@@ -48,9 +48,9 @@ public class OrderController {
         @ApiResponse (code = 403, message = "Forbidden")
     })
     @GetMapping (produces = "application/json")
-    public List<Order> getOrderByPeriod(@RequestParam @DateTimeFormat (iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-                                        @RequestParam @DateTimeFormat (iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+    public List<Order> getOrdersByPeriod(@RequestParam @DateTimeFormat (iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+                                         @RequestParam @DateTimeFormat (iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         log.info("### Fetching all orders between {} and {}", start, end);
-        return orderService.getOrderByPeriod(start, end);
+        return orderService.getOrdersByPeriod(start, end);
     }
 }

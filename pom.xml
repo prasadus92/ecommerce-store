@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.ecommerce</groupId>
-    <artifactId>store</artifactId>
+    <artifactId>ecommerce-application</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>online-store</name>
+    <name>ecommerce-application</name>
     <description>CRUD service for an Online (E-commerce) Store</description>
 
     <properties>
