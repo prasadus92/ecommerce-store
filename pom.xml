@@ -115,7 +115,7 @@
     </dependencies>
 
     <build>
-        <finalName>online-store-application</finalName>
+        <finalName>ecommerce-store-application</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

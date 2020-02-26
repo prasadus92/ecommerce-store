@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-java -jar online-store-application.jar
+java -jar ecommerce-store-application.jar

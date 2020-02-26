@@ -64,7 +64,7 @@ As the project uses Maven as the build system, just run the below command in the
 mvn clean install
 ```
 
-The name of the generated JAR is `online-store-application.jar`.
+The name of the generated JAR is `ecommerce-store-application.jar`.
 
 To build the Dockerfile as well (make sure that the Docker daemon is running) -
 
@@ -97,7 +97,7 @@ mvn spring-boot:run
 Once you build the Application, the artifacts will be generated and copied to `target` directory. Hence, using the JAR, we could start the Application this way -
 
 ```bash
-java -jar online-store-application.jar
+java -jar ecommerce-store-application.jar
 ```
 
 ### Using Docker
