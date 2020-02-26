@@ -1,6 +1,6 @@
 # E-commerce Application
 
-[![Build Status](https://travis-ci.com/prasadus92/registration-service.svg?branch=master)](https://travis-ci.com/prasadus92/ecommerce-store) [![codecov](https://codecov.io/gh/patrykkrawczyk/TDDAndDesignPatternsExample/branch/master/graph/badge.svg)](https://codecov.io/gh/prasadus92/ecommerce-store)
+[![Build Status](https://travis-ci.com/prasadus92/registration-service.svg?branch=master)](https://travis-ci.com/prasadus92/ecommerce-store) [![codecov](https://codecov.io/gh/patrykkrawczyk/TDDAndDesignPatternsExample/branch/master/graph/badge.svg)](https://codecov.io/gh/prasadus92/ecommerce-store) [![Maintainability](https://api.codeclimate.com/v1/badges/9ef32de1cfdbcc97b1f0/maintainability)](https://codeclimate.com/github/prasadus92/ecommerce-store/maintainability)
 
 ## Problem Statement
 
