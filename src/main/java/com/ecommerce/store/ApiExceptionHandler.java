@@ -1,6 +1,7 @@
 package com.ecommerce.store;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleProductNotExistsError(ProductNotExistsException ex, WebRequest request) {
         log.warn("Handling ProductNotExistsException: request - {}, error - {}", request.getDescription(false), ex.getMessage());
         return new ResponseEntity<>(ErrorDto.builder().message(ex.getMessage()).build(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler (OptimisticLockingFailureException.class)
+    public final ResponseEntity<Object> handleOptimisticLockFailureError(OptimisticLockingFailureException ex, WebRequest request) {
+        log.warn("Handling OptimisticLockingFailureException: request - {}, error - {}", request.getDescription(false), ex.getMessage());
+        return new ResponseEntity<>(ErrorDto.builder().message(ex.getMessage()).build(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler ({Exception.class})

@@ -25,27 +25,13 @@ public class ProductControllerTest {
 
     @LocalServerPort
     protected int port;
+    private String path;
 
     @BeforeAll
     public void beforeTest() {
         RestAssured.port = port;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-    }
-
-    // ToDo: This needs a fix
-    @Test
-    public void testFetchingProducts() {
-        createNewProduct();
-
-        //@formatter:off
-        given()
-            .contentType(ContentType.JSON)
-            .when()
-            .get("api/v1/products")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .body("size()", greaterThanOrEqualTo(1));
-        //@formatter:on
+        path = "api/v1/products";
     }
 
     @Test
@@ -60,7 +46,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(product)
             .when()
-            .post("api/v1/products")
+            .post(path)
             .then()
             .statusCode(HttpStatus.SC_CREATED);
         //@formatter:on
@@ -77,7 +63,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(product)
             .when()
-            .post("api/v1/products")
+            .post(path)
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
         //@formatter:on
@@ -94,7 +80,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(product)
             .when()
-            .post("api/v1/products")
+            .post(path)
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
         //@formatter:on
@@ -112,7 +98,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(product)
             .when()
-            .post("api/v1/products")
+            .post(path)
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
         //@formatter:on
@@ -133,7 +119,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(updated)
             .when()
-            .put("api/v1/products")
+            .put(path)
             .then()
             .statusCode(HttpStatus.SC_OK)
             .body("id", equalTo(createdProductId))
@@ -158,7 +144,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(updated)
             .when()
-            .put("api/v1/products")
+            .put(path)
             .then()
             .statusCode(HttpStatus.SC_OK)
             .body("id", equalTo(createdProductId))
@@ -181,7 +167,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(product)
             .when()
-            .post("api/v1/products")
+            .post(path)
             .then()
             .statusCode(HttpStatus.SC_CREATED)
             .extract()
@@ -199,7 +185,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(updated)
             .when()
-            .put("api/v1/products")
+            .put(path)
             .then()
             .statusCode(HttpStatus.SC_OK)
             .body("id", equalTo(createdProductId))
@@ -224,7 +210,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(updated)
             .when()
-            .put("api/v1/products")
+            .put(path)
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
         //@formatter:on
@@ -243,7 +229,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(updated)
             .when()
-            .put("api/v1/products")
+            .put(path)
             .then()
             .statusCode(HttpStatus.SC_BAD_REQUEST);
         //@formatter:on
@@ -262,10 +248,26 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(updated)
             .when()
-            .put("api/v1/products")
+            .put(path)
             .then()
             .statusCode(HttpStatus.SC_NOT_FOUND)
             .body("message", containsString("Product doesn't exist in the system to update"));
+        //@formatter:on
+    }
+
+    // ToDo: This needs a fix, not a perfect test
+    @Test
+    public void testFetchingProducts() {
+        createNewProduct();
+
+        //@formatter:off
+        given()
+            .contentType(ContentType.JSON)
+            .when()
+            .get(path)
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+            .body("size()", greaterThanOrEqualTo(1));
         //@formatter:on
     }
 
@@ -281,7 +283,7 @@ public class ProductControllerTest {
             .contentType(ContentType.JSON)
             .body(product)
             .when()
-            .post("api/v1/products")
+            .post(path)
             .then()
             .statusCode(HttpStatus.SC_CREATED)
             .extract()

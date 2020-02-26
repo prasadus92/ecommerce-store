@@ -7,14 +7,14 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=store_user
-      - POSTGRES_PASSWORD=storesecret
-      - POSTGRES_DB=store_db
+      - POSTGRES_USER=ecommerce_user
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=ecommerce_db
     volumes:
       - ./storage/postgresql/data:/var/lib/postgresql/data
 
-  store-application:
-    image: com.ecommerce/store:latest
+  ecommerce-application:
+    image: com.ecommerce/ecommerce-application:latest
     ports:
       - "8080:8080"
     healthcheck:
@@ -24,4 +24,6 @@ services:
     command: ["/app/wait-for-postgres.sh", "postgres", "sh", "/app/launch-application.sh"]
     environment:
       - SPRING_PROFILES_ACTIVE=production
-      - POSTGRES_PASSWORD=storesecret
+      - POSTGRES_USER=ecommerce_user
+      - POSTGRES_DB=ecommerce_db
+      - POSTGRES_PASSWORD=secret

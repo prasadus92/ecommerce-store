@@ -10,9 +10,8 @@ public interface OrderService {
 
     Order placeOrder(OrderDto order);
 
-    List<Order> getOrderByPeriod(LocalDateTime start, LocalDateTime end);
+    List<Order> getOrdersByPeriod(LocalDateTime start, LocalDateTime end);
 
     List<Order> findAll();
 
 }
-
