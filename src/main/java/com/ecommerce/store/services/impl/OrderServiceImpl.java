@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import static java.util.Objects.nonNull;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void checkItemsAreEmpty(OrderDto order) {
-        if (order.getItems().isEmpty()) {
+        if (nonNull(order) && order.getItems().isEmpty()) {
             throw new NoItemsInOrderException("Order creation request doesn't contain any Products");
         }
     }
