@@ -34,18 +34,22 @@ public class ProductServiceImpl implements ProductService {
         return repository
             .findById(productDto.getId())
             .map(existingProduct -> {
-                     if (StringUtils.hasLength(productDto.getName())) {
-                         existingProduct.setName(productDto.getName());
-                     }
-                     if (StringUtils.hasLength(productDto.getDescription())) {
-                         existingProduct.setDescription(productDto.getDescription());
-                     }
-                     if (productDto.getPrice() != null) {
-                         existingProduct.setPrice(productDto.getPrice());
-                     }
-                     return repository.save(existingProduct);
+                checkAllFieldExists(productDto, existingProduct);
+                return repository.save(existingProduct);
                  }
             ).orElseThrow(() -> new ProductNotExistsException("Product doesn't exist in the system to update"));
+    }
+
+    private void checkAllFieldExists(ProductUpdationDto productDto, Product existingProduct) {
+        if (StringUtils.hasLength(productDto.getName())) {
+            existingProduct.setName(productDto.getName());
+        }
+        if (StringUtils.hasLength(productDto.getDescription())) {
+            existingProduct.setDescription(productDto.getDescription());
+        }
+        if (productDto.getPrice() != null) {
+            existingProduct.setPrice(productDto.getPrice());
+        }
     }
 
     // ToDo: Add pagination

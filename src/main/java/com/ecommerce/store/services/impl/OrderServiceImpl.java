@@ -29,9 +29,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order placeOrder(OrderDto order) {
-        if (order.getItems().isEmpty()) {
-            throw new NoItemsInOrderException("Order creation request doesn't contain any Products");
-        }
+        checkItemsAreEmpty(order);
 
         Order created = orderRepository.save(Order.builder()
                                                   .buyerEmail(order.getBuyerEmail())
@@ -54,6 +52,12 @@ public class OrderServiceImpl implements OrderService {
         created.setItems(items);
 
         return orderRepository.save(created);
+    }
+
+    private void checkItemsAreEmpty(OrderDto order) {
+        if (order.getItems().isEmpty()) {
+            throw new NoItemsInOrderException("Order creation request doesn't contain any Products");
+        }
     }
 
     @Override
