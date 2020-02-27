@@ -13,6 +13,8 @@ import com.ecommerce.store.services.ProductService;
 
 import java.util.List;
 
+import static java.util.Objects.nonNull;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -41,13 +43,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private void checkAllFieldExists(ProductUpdationDto productDto, Product existingProduct) {
-        if (StringUtils.hasLength(productDto.getName())) {
+        if (hasLength(productDto.getName())) {
             existingProduct.setName(productDto.getName());
         }
-        if (StringUtils.hasLength(productDto.getDescription())) {
+        if (hasLength(productDto.getDescription())) {
             existingProduct.setDescription(productDto.getDescription());
         }
-        if (productDto.getPrice() != null) {
+        if (nonNull(productDto.getPrice())) {
             existingProduct.setPrice(productDto.getPrice());
         }
     }
