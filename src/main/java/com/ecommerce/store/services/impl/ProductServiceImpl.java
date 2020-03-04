@@ -3,7 +3,6 @@ package com.ecommerce.store.services.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import com.ecommerce.store.entities.dao.Product;
 import com.ecommerce.store.entities.dto.ProductCreationDto;
 import com.ecommerce.store.entities.dto.ProductUpdationDto;
@@ -12,6 +11,9 @@ import com.ecommerce.store.repositories.ProductRepository;
 import com.ecommerce.store.services.ProductService;
 
 import java.util.List;
+
+import static java.util.Objects.nonNull;
+import static org.springframework.util.StringUtils.hasLength;
 
 @Service
 @RequiredArgsConstructor
@@ -34,18 +36,22 @@ public class ProductServiceImpl implements ProductService {
         return repository
             .findById(productDto.getId())
             .map(existingProduct -> {
-                     if (StringUtils.hasLength(productDto.getName())) {
-                         existingProduct.setName(productDto.getName());
-                     }
-                     if (StringUtils.hasLength(productDto.getDescription())) {
-                         existingProduct.setDescription(productDto.getDescription());
-                     }
-                     if (productDto.getPrice() != null) {
-                         existingProduct.setPrice(productDto.getPrice());
-                     }
-                     return repository.save(existingProduct);
+                modifyUpdatedFields(productDto, existingProduct);
+                return repository.save(existingProduct);
                  }
             ).orElseThrow(() -> new ProductNotExistsException("Product doesn't exist in the system to update"));
+    }
+
+    private void modifyUpdatedFields(ProductUpdationDto productDto, Product existingProduct) {
+        if (hasLength(productDto.getName())) {
+            existingProduct.setName(productDto.getName());
+        }
+        if (hasLength(productDto.getDescription())) {
+            existingProduct.setDescription(productDto.getDescription());
+        }
+        if (nonNull(productDto.getPrice())) {
+            existingProduct.setPrice(productDto.getPrice());
+        }
     }
 
     // ToDo: Add pagination

@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
+import static java.util.Objects.nonNull;
 
 @Embeddable
 @Data
@@ -30,12 +31,12 @@ public class OrderItemPK implements Serializable {
         int prime = 31;
         int result = 1;
 
-        result = prime * result + ((order.getId() == null)
+        result = prime * result + (!nonNull(order.getId())
                                    ? 0
                                    : order
                                        .getId()
                                        .hashCode());
-        result = prime * result + ((product.getId() == null)
+        result = prime * result + (!nonNull(product.getId())
                                    ? 0
                                    : product
                                        .getId()

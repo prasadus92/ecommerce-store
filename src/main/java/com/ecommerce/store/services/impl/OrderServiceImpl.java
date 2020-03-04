@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -29,9 +31,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order placeOrder(OrderDto order) {
-        if (order.getItems().isEmpty()) {
-            throw new NoItemsInOrderException("Order creation request doesn't contain any Products");
-        }
+        checkIfItemsAreEmpty(order);
 
         Order created = orderRepository.save(Order.builder()
                                                   .buyerEmail(order.getBuyerEmail())
@@ -54,6 +54,12 @@ public class OrderServiceImpl implements OrderService {
         created.setItems(items);
 
         return orderRepository.save(created);
+    }
+
+    private void checkIfItemsAreEmpty(OrderDto order) {
+        if (isNull(order) && order.getItems().isEmpty()) {
+            throw new NoItemsInOrderException("Order creation request doesn't contain any Products");
+        }
     }
 
     @Override
