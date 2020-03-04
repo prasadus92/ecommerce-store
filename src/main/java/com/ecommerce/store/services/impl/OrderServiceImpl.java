@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void checkIfItemsAreEmpty(OrderDto order) {
-        if (isNull(order) && order.getItems().isEmpty()) {
+        if (isNull(order) || order.getItems().isEmpty()) {
             throw new NoItemsInOrderException("Order creation request doesn't contain any Products");
         }
     }
