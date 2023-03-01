@@ -16,7 +16,7 @@ services:
   ecommerce-application:
     image: com.ecommerce/ecommerce-application:latest
     ports:
-      - "8080:8001"
+      - "8000:8001"
     healthcheck:
       test: ["CMD", "curl", "-f", "localhost:8001/actuator/health"]
     depends_on:
