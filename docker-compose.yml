@@ -16,9 +16,9 @@ services:
   ecommerce-application:
     image: com.ecommerce/ecommerce-application:latest
     ports:
-      - "8080:8080"
+      - "8080:8001"
     healthcheck:
-      test: ["CMD", "curl", "-f", "localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "localhost:8001/actuator/health"]
     depends_on:
       - postgres
     command: ["/app/wait-for-postgres.sh", "postgres", "sh", "/app/launch-application.sh"]
