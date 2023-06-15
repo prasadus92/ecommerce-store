@@ -8,9 +8,9 @@ pipeline {
     }
     stages {
         stage('Github checkout') {
-          stpes {
+          steps {
                git branch: 'master', url: 'https://github.com/Rabi8429/ecommerce-store.git' 
-          }  
+            }  
         }
         stage('Build and Test') {
             steps {
