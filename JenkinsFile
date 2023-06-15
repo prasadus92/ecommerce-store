@@ -1,0 +1,26 @@
+pipeline {
+    agent {
+        docker{
+        image 'abhishekf5/maven-abhishek-docker-agent:v1'
+        args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
+
+        }
+    }
+    stages {
+        stage('git checkout') {
+          stapes {
+           sh 'echo passed'
+            git branch: 'master', url: 'https://github.com/Rabi8429/ecommerce-store.git' 
+          }  
+        }
+        stage('Build and Test') {
+            steps {
+                // build the project and create a JAR  file
+                sh 'mvn claen package'
+            }
+        }
+
+
+    }
+
+}
