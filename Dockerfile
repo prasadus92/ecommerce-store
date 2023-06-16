@@ -9,4 +9,4 @@ RUN ["chmod", "+x", "/app/launch-application.sh"]
 RUN apk add postgresql-client
 WORKDIR /app
 
-EXPOSE 8080
+EXPOSE 8081
