@@ -20,12 +20,17 @@ pipeline {
         }
         stage('Docker image build') {
             steps{
-                sh 'docker build -t rabi4450/ecommerce-app .'
+                // sh 'docker build -t rabi4450/ecommerce-app .'
             }
         }
         stage(' UNIT test') {
             steps{
                 sh 'mvn clean test'
+            }
+        }
+        stage('Running the Application using maven') {
+            steps{
+                sh 'mvn spring-boot:run'
             }
         }
 
