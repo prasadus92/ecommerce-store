@@ -18,11 +18,6 @@ pipeline {
                 sh 'mvn clean install'
             }
         }
-        stage('Docker image build') {
-            steps{
-                // sh 'docker build -t rabi4450/ecommerce-app .'
-            }
-        }
         stage(' UNIT test') {
             steps{
                 sh 'mvn clean test'
