@@ -1,19 +1,60 @@
-logging:
-  level: INFO
-
 spring:
   datasource:
-    driverClassName: org.postgresql.Driver
-    password: secret
-    url: jdbc:postgresql://postgres:5432/ecommerce_db
-    username: ecommerce_user
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:ecommerce_db}
+    username: ${DB_USER:ecommerce_user}
+    password: ${DB_PASSWORD:secret}
+    driver-class-name: org.postgresql.Driver
     hikari:
-      connectionTimeout: 20000
-      maximumPoolSize: 10
+      connection-timeout: 20000
+      maximum-pool-size: ${DB_POOL_SIZE:20}
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    generate-ddl: true
+    open-in-view: false
     hibernate:
-      ddl-auto: update
-      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
-    show-sql: true
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        default_schema: public
+    show-sql: false
+
+  h2:
+    console:
+      enabled: false
+
+server:
+  port: ${SERVER_PORT:8080}
+  tomcat:
+    max-threads: 200
+    accept-count: 100
+    max-connections: 10000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+logging:
+  level:
+    root: WARN
+    com.ecommerce.store: INFO
+    org.springframework: WARN
+    org.hibernate: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
