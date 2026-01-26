@@ -1,141 +1,285 @@
-# E-commerce Application
+# E-commerce Store API
 
-[![Build Status](https://travis-ci.com/prasadus92/registration-service.svg?branch=master)](https://travis-ci.com/prasadus92/ecommerce-store) [![codecov](https://codecov.io/gh/patrykkrawczyk/TDDAndDesignPatternsExample/branch/master/graph/badge.svg)](https://codecov.io/gh/prasadus92/ecommerce-store) [![Maintainability](https://api.codeclimate.com/v1/badges/9ef32de1cfdbcc97b1f0/maintainability)](https://codeclimate.com/github/prasadus92/ecommerce-store/maintainability)
+[![CI/CD Pipeline](https://github.com/prasadus92/ecommerce-store/actions/workflows/ci.yml/badge.svg)](https://github.com/prasadus92/ecommerce-store/actions/workflows/ci.yml)
+[![Java](https://img.shields.io/badge/Java-21-blue.svg)](https://openjdk.org/projects/jdk/21/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Problem Statement
+A production-grade RESTful API for e-commerce operations built with modern Java and Spring Boot best practices.
 
-Create a tiny REST/JSON web service in Java using Spring Boot (RestController) with an API that
-supports basic Products' CRUD:
+## Features
 
-- Create a new Product
+- **Product Management** - Full CRUD operations with SKU uniqueness, soft-delete support, and optimistic locking
+- **Order Processing** - Create orders with multiple items, status workflow management, and order cancellation
+- **Price Integrity** - Product price changes don't affect historical order totals (prices frozen at order time)
+- **Pagination & Sorting** - All list endpoints support pagination, sorting, and filtering
+- **Caching** - Caffeine-based caching for improved read performance
+- **API Documentation** - Interactive OpenAPI 3.0 documentation with Swagger UI
+- **Health Monitoring** - Spring Actuator endpoints with Prometheus metrics
+- **Containerization** - Multi-stage Docker build with health checks
 
-- Get a list of all Products
+## Tech Stack
 
-- Update a Product
+| Category | Technology |
+|----------|------------|
+| Language | Java 21 (LTS) |
+| Framework | Spring Boot 3.3.5 |
+| Database | PostgreSQL 16 / H2 (dev) |
+| ORM | Spring Data JPA / Hibernate |
+| Build | Maven |
+| API Docs | springdoc-openapi 2.6 |
+| Caching | Caffeine |
+| Testing | JUnit 5, Testcontainers, REST Assured |
+| CI/CD | GitHub Actions |
+| Container | Docker with multi-stage builds |
 
-The API should also support:
+## Quick Start
 
-- Placing an Order
+### Prerequisites
 
-- Retrieving all orders within a given time period
+- Java 21+
+- Maven 3.9+
+- Docker & Docker Compose (optional, for containerized deployment)
 
-A product should have a name and some representation of its price.
-
-Each order should be recorded and have a list of products. It should also have the buyer’s e-mail, and the
-time the order was placed. The total value of the order should always be calculated, based on the prices
-of the products in it.
-
-It should be possible to change the product’s price, but this shouldn’t affect the total value of orders which
-have already been placed.
-
-### Requirements
-
-- Implement your solution according to the above specification.
-
-- Provide unit tests.
-
-- Document your REST-API.
-
-- Provide a storage solution for persisting the web service’s state.
-
-- Have a way to run the service with its dependencies (database etc) locally. You can use either a simple script or docker or something else. It’s up to you.
-
-## Solution Overview
-
-### Tools Used
-
-- Java 8
-
-- Spring Boot v2.2.4.RELEASE
-
-- PostgreSQL v10
-
-- Maven
-
-- Docker
-
-- Travis (CI)
-
-## Building the Application
-
-As the project uses Maven as the build system, just run the below command in the project directory -
+### Development Mode (H2 Database)
 
 ```bash
+# Clone the repository
+git clone https://github.com/prasadus92/ecommerce-store.git
+cd ecommerce-store
+
+# Build the project
 mvn clean install
-```
 
-The name of the generated JAR is `ecommerce-store-application.jar`.
-
-To build the Dockerfile as well (make sure that the Docker daemon is running) -
-
-```bash
-mvn clean install dockerfile:build
-```
-
-*NOTE:* Maven is configured with `dockerfile-maven-plugin` for building the Docker image
-
-### Running Tests
-
-Run the below command -
-
-```bash
-mvn clean test
-```
-
-## Running the Application
-
-### Using Maven
-
-You could use Maven to run the Spring Boot application; here is the command to use -
-
-```bash
+# Run the application
 mvn spring-boot:run
 ```
 
-### Using the generated artifact
+The API will be available at `http://localhost:8080`
 
-Once you build the Application, the artifacts will be generated and copied to `target` directory. Hence, using the JAR, we could start the Application this way -
-
-```bash
-java -jar ecommerce-store-application.jar
-```
-
-### Using Docker
-
-If you have generated the Docker image in the build step, use the below command to run the Application on Docker -
+### Production Mode (Docker Compose)
 
 ```bash
-docker-compose up
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f ecommerce-api
+
+# Stop services
+docker-compose down
 ```
 
-To tail the logs, just run -
+## API Documentation
+
+Once the application is running, access the interactive API documentation:
+
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **OpenAPI Spec**: http://localhost:8080/api-docs
+
+## API Endpoints
+
+### Products
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/products` | List all products (paginated) |
+| `GET` | `/api/v1/products/{id}` | Get product by ID |
+| `POST` | `/api/v1/products` | Create a new product |
+| `PUT` | `/api/v1/products/{id}` | Update a product |
+| `DELETE` | `/api/v1/products/{id}` | Deactivate a product |
+
+### Orders
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/orders` | List all orders (paginated, filterable) |
+| `GET` | `/api/v1/orders/{id}` | Get order by ID |
+| `POST` | `/api/v1/orders` | Place a new order |
+| `PATCH` | `/api/v1/orders/{id}/status` | Update order status |
+| `POST` | `/api/v1/orders/{id}/cancel` | Cancel an order |
+
+### Example Requests
+
+**Create a Product:**
+```bash
+curl -X POST http://localhost:8080/api/v1/products \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "iPhone 15 Pro",
+    "description": "Latest flagship smartphone",
+    "price": 999.99,
+    "sku": "IPHONE-15-PRO"
+  }'
+```
+
+**Place an Order:**
+```bash
+curl -X POST http://localhost:8080/api/v1/orders \
+  -H "Content-Type: application/json" \
+  -d '{
+    "buyerEmail": "customer@example.com",
+    "items": [
+      {"productId": "uuid-here", "quantity": 2}
+    ]
+  }'
+```
+
+**Get Orders by Date Range:**
+```bash
+curl "http://localhost:8080/api/v1/orders?startDate=2024-01-01&endDate=2024-12-31"
+```
+
+## Project Structure
+
+```
+src/
+├── main/
+│   ├── java/com/ecommerce/store/
+│   │   ├── api/
+│   │   │   ├── controller/     # REST controllers
+│   │   │   ├── dto/            # Request/Response DTOs (Java records)
+│   │   │   ├── exception/      # Global exception handling
+│   │   │   └── mapper/         # MapStruct mappers
+│   │   ├── config/             # Configuration classes
+│   │   └── domain/
+│   │       ├── entity/         # JPA entities
+│   │       ├── exception/      # Domain exceptions
+│   │       ├── repository/     # Spring Data repositories
+│   │       └── service/        # Business logic
+│   └── resources/
+│       ├── application.yml             # Development config
+│       └── application-production.yml  # Production config
+└── test/
+    └── java/com/ecommerce/store/
+        ├── domain/service/     # Unit tests
+        └── integration/        # Integration tests with Testcontainers
+```
+
+## Configuration
+
+### Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DB_HOST` | Database host | `postgres` |
+| `DB_PORT` | Database port | `5432` |
+| `DB_NAME` | Database name | `ecommerce_db` |
+| `DB_USER` | Database username | `ecommerce_user` |
+| `DB_PASSWORD` | Database password | `secret` |
+| `SERVER_PORT` | Application port | `8080` |
+| `JAVA_OPTS` | JVM options | See Dockerfile |
+
+### Profiles
+
+- **default** - Development mode with H2 in-memory database
+- **production** - Production mode with PostgreSQL
+- **test** - Test configuration with Testcontainers
+
+## Testing
 
 ```bash
-docker-compose logs -f
+# Run all tests
+mvn test
+
+# Run with coverage report
+mvn verify
+
+# Coverage report location
+open target/site/jacoco/index.html
 ```
 
-*NOTE:* The Spring profile used while running with Docker is `production`. This requires PostgreSQL to be running, which is already configured in the Docker Compose file.
+### Test Categories
 
-## Accessing the API Documentation
+- **Unit Tests** - Service layer tests with mocked dependencies
+- **Integration Tests** - Full API tests using Testcontainers (PostgreSQL)
 
-Swagger is included in the project. Hence, the API documentation is available at http://localhost:8080/swagger-ui.html. 
+## Monitoring
 
-## Questions on Extensibility
+### Actuator Endpoints
 
-1. You do not need to add authentication to your web service, but propose a protocol / method and
-justify your choice.
+| Endpoint | Description |
+|----------|-------------|
+| `/actuator/health` | Application health status |
+| `/actuator/info` | Application information |
+| `/actuator/metrics` | Application metrics |
+| `/actuator/prometheus` | Prometheus-format metrics |
 
-We could use OAuth2 and JWT based authentication which is quite straightforward to implement by adding appropriate Spring Security dependencies. Also, this is convenient as there might be multiple clients using this service in a real-world scenario (https://www.toptal.com/spring/spring-boot-oauth2-jwt-rest-protection).
-An alternate approach is to use an identity provider like Okta, Auth0 etc., if that's an allowed use-case.
+### Health Check Response
 
-2. How can you make the service redundant? What considerations should you do?
+```json
+{
+  "status": "UP",
+  "components": {
+    "db": {"status": "UP"},
+    "diskSpace": {"status": "UP"}
+  }
+}
+```
 
-The concurrency part is handled using Optimistic Locking, specifically for the update of the Products. It would be ideal to add additional mechanisms like an "ETag" - "If-Match" header support.
-Also, configuration (including passwords) is currently packaged along with the generated artifact; it would be better to use a separate Spring Cloud Config service in a scenario where the architecture is based on Microservices. 
+## Architecture Decisions
 
-## To Do
+### Why Java Records for DTOs?
+- Immutable by default, preventing accidental mutation
+- Concise syntax with automatic getters, equals, hashCode, toString
+- Clear separation between mutable entities and immutable API contracts
 
-1. Try finding an alternative to using `wait-for-postgres.sh`; it currently requires PostgreSQL client to be installed on the Docker container.
-2. Improve tests & coverage.
-3. Add pagination to "fetch" APIs.
-4. "User" is not included in the implemented model; that's something to be considered in a real-world scenario.
+### Why MapStruct?
+- Compile-time code generation (no runtime reflection overhead)
+- Type-safe mapping with compile-time validation
+- Clean separation between domain and API layers
+
+### Why Caffeine Cache?
+- High-performance, near-optimal caching
+- Memory-efficient with configurable eviction policies
+- Built-in statistics for monitoring cache effectiveness
+
+### Why Testcontainers?
+- Real database testing without mocks
+- Consistent test environment across local and CI
+- Eliminates "works on my machine" issues
+
+## Error Handling
+
+The API uses RFC 7807 Problem Details for error responses:
+
+```json
+{
+  "type": "https://api.ecommerce.com/errors/not-found",
+  "title": "Resource Not Found",
+  "status": 404,
+  "detail": "Product not found with identifier: abc123",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "resourceType": "Product",
+  "identifier": "abc123"
+}
+```
+
+## Security Considerations
+
+For production deployment, consider adding:
+
+1. **Authentication** - OAuth2 + JWT via Spring Security
+2. **Rate Limiting** - Using Spring Cloud Gateway or Bucket4j
+3. **Input Validation** - Already implemented with Bean Validation
+4. **HTTPS** - Configure TLS in reverse proxy (nginx/traefik)
+5. **CORS** - Configure allowed origins for web clients
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Spring Boot](https://spring.io/projects/spring-boot)
+- [springdoc-openapi](https://springdoc.org/)
+- [Testcontainers](https://www.testcontainers.org/)
+- [MapStruct](https://mapstruct.org/)
